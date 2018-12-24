@@ -58,6 +58,7 @@ class AdvTrainer(BaseTrainer):
             self.optimizer.zero_grad()
             output = self.model(data)
             loss = self.loss(output, target)
+            loss.backward(retain_graph=True)
             grad = data.grad.data
 
             data_adv = attack(data,grad,0.3).to(self.device)
