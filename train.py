@@ -6,7 +6,7 @@ import data_loader.data_loaders as module_data
 import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
-from trainer import Trainer
+from trainer import Trainer,AdvTrainer
 from utils import Logger
 
 
@@ -34,7 +34,7 @@ def main(config, resume):
     optimizer = get_instance(torch.optim, 'optimizer', config, trainable_params)
     lr_scheduler = get_instance(torch.optim.lr_scheduler, 'lr_scheduler', config, optimizer)
 
-    trainer = Trainer(model, loss, metrics, optimizer,
+    trainer = AdvTrainer(model, loss, metrics, optimizer,
                       resume=resume,
                       config=config,
                       data_loader=data_loader,
