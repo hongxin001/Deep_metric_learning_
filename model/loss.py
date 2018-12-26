@@ -10,18 +10,18 @@ def similarity(inputs_):
     sim = torch.matmul(inputs_, inputs_.t())
     return sim
 
-def nll_loss(output, target):
+def nll_loss(output, target,device='cpu'):
     return F.nll_loss(output, target)
 
 
-def triplet_loss(inputs, targets, margin=0):
+def triplet_loss(inputs, targets, device='cpu',margin=0):
     n = inputs.size(0)
     # Compute similarity matrix
     sim_mat = similarity(inputs) # n by n
     # print(sim_mat)
-    targets = targets#.cuda()
+    targets = targets.to(device)
     # split the positive and negative pairs
-    eyes_ = Variable(torch.eye(n, n))#.cuda()
+    eyes_ = Variable(torch.eye(n, n)).to(device)
     # eyes_ = Variable(torch.eye(n, n))
     pos_mask = targets.expand(n, n).eq(targets.expand(n, n).t())
     neg_mask = eyes_.eq(eyes_) - pos_mask
