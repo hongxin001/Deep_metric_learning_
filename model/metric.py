@@ -22,7 +22,7 @@ def my_metric2(output, target, k=3):
     return correct / len(target)
 
 
-def NMI(X, ground_truth, n_cluster=10):
+def NMI(X, ground_truth, n_cluster=3):
     X = [to_numpy(x) for x in X]
     X = np.array(X)
     ground_truth = np.array(ground_truth)
