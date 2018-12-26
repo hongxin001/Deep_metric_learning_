@@ -32,7 +32,7 @@ def triplet_loss(inputs, targets, margin=0):
     num_instances = len(pos_sim)//n + 1
     num_neg_instances = n - num_instances
 
-    pos_sim = pos_sim.resize(len(pos_sim)//num_instances, num_instances)
+    pos_sim = pos_sim.resize(len(pos_sim)//(num_instances-1), num_instances-1)
     neg_sim = neg_sim.resize(
         len(neg_sim) // num_neg_instances, num_neg_instances)
 
