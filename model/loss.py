@@ -17,7 +17,7 @@ def nll_loss(output, target,device=torch.device('cpu')):
 def triplet_loss(inputs, targets, device=torch.device('cpu'),margin=0):
     n = inputs.size(0)
     # Compute similarity matrix
-    sim_mat = similarity(inputs) # n by n
+    sim_mat = similarity(inputs).to(device) # n by n
     # print(sim_mat)
     targets = targets.to(device)
     # split the positive and negative pairs
@@ -29,11 +29,13 @@ def triplet_loss(inputs, targets, device=torch.device('cpu'),margin=0):
 
     pos_sim = sim_mat.mul(pos_mask.to(device,dtype=torch.float32))
     neg_sim = sim_mat.mul(neg_mask.to(device,dtype=torch.float32))
-    max_pos_dist,max_pos_index = torch.max(pos_sim, 0)
-    min_neg_dist,min_neg_index = torch.min(neg_sim, 0)
+    max_pos_dist, max_pos_index = torch.max(pos_sim,0)
+
+    neg_sim[neg_sim==0] = 999999
+    min_neg_dist, min_neg_index = torch.min(neg_sim,0)
     loss_x = torch.max(max_pos_dist - min_neg_dist + margin,torch.zeros_like(max_pos_dist))
     loss = torch.mean(loss_x)
-
+    pdb.set_trace()
     return loss
 
 
