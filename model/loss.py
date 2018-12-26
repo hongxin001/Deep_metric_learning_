@@ -2,7 +2,6 @@ import torch.nn.functional as F
 import torch
 from torch.autograd import Variable
 import numpy as np
-import pdb
 
 def similarity(inputs_):
     # Compute similarity mat of deep feature
@@ -35,7 +34,6 @@ def triplet_loss(inputs, targets, device=torch.device('cpu'),margin=0):
     min_neg_dist, min_neg_index = torch.min(neg_sim,0)
     loss_x = torch.max(max_pos_dist - min_neg_dist + margin,torch.zeros_like(max_pos_dist))
     loss = torch.mean(loss_x)
-    pdb.set_trace()
     return loss
 
 
