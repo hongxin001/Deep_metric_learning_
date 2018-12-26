@@ -10,11 +10,11 @@ def similarity(inputs_):
     sim = torch.matmul(inputs_, inputs_.t())
     return sim
 
-def nll_loss(output, target,device='cpu'):
+def nll_loss(output, target,device=torch.device('cpu')):
     return F.nll_loss(output, target)
 
 
-def triplet_loss(inputs, targets, device='cpu',margin=0):
+def triplet_loss(inputs, targets, device=torch.device('cpu'),margin=0):
     n = inputs.size(0)
     # Compute similarity matrix
     sim_mat = similarity(inputs) # n by n
@@ -23,12 +23,12 @@ def triplet_loss(inputs, targets, device='cpu',margin=0):
     # split the positive and negative pairs
     eyes_ = Variable(torch.eye(n, n)).to(device)
     # eyes_ = Variable(torch.eye(n, n))
-    pos_mask = targets.expand(n, n).eq(targets.expand(n, n).t()).to(device)
+    pos_mask = targets.expand(n, n).eq(targets.expand(n, n).t())
     neg_mask = eyes_.eq(eyes_) - pos_mask
     pos_mask = pos_mask - eyes_.eq(1)
 
-    pos_sim = sim_mat.mul(pos_mask.to(dtype=torch.float32))
-    neg_sim = sim_mat.mul(neg_mask.to(dtype=torch.float32))
+    pos_sim = sim_mat.mul(pos_mask.to(device,dtype=torch.float32))
+    neg_sim = sim_mat.mul(neg_mask.to(device,dtype=torch.float32))
     max_pos_dist,max_pos_index = torch.max(pos_sim, 0)
     min_neg_dist,min_neg_index = torch.min(neg_sim, 0)
     loss_x = torch.max(max_pos_dist - min_neg_dist + margin,torch.zeros_like(max_pos_dist))
