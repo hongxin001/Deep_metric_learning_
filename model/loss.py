@@ -23,7 +23,7 @@ def triplet_loss(inputs, targets, device='cpu',margin=0):
     # split the positive and negative pairs
     eyes_ = Variable(torch.eye(n, n)).to(device)
     # eyes_ = Variable(torch.eye(n, n))
-    pos_mask = targets.expand(n, n).eq(targets.expand(n, n).t())
+    pos_mask = targets.expand(n, n).eq(targets.expand(n, n).t()).to(device)
     neg_mask = eyes_.eq(eyes_) - pos_mask
     pos_mask = pos_mask - eyes_.eq(1)
 
