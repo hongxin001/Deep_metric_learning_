@@ -30,7 +30,7 @@ def NMI(X, ground_truth, n_cluster=3):
     kmeans = KMeans(n_clusters=n_cluster, n_jobs=-1, random_state=0).fit(X)
 
     print('K-means done')
-    nmi = normalized_mutual_info_score(ground_truth, kmeans.labels_)
+    nmi = normalized_mutual_info_score(ground_truth, kmeans.labels_, average_method="arithmetic")
     return nmi
 
 
