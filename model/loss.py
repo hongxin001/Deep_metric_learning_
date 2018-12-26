@@ -13,7 +13,7 @@ def nll_loss(output, target):
     return F.nll_loss(output, target)
 
 
-def triplet_loss(inputs, targets):
+def triplet_loss(inputs, targets, margin=0):
     n = inputs.size(0)
     # Compute similarity matrix
     sim_mat = similarity(inputs)
@@ -32,7 +32,7 @@ def triplet_loss(inputs, targets):
     num_instances = len(pos_sim)//n + 1
     num_neg_instances = n - num_instances
 
-    pos_sim = pos_sim.resize(len(pos_sim)//(num_instances-1), num_instances-1)
+    pos_sim = pos_sim.resize(len(pos_sim)//num_instances, num_instances)
     neg_sim = neg_sim.resize(
         len(neg_sim) // num_neg_instances, num_neg_instances)
 
@@ -44,8 +44,8 @@ def triplet_loss(inputs, targets):
         pos_pair_ = torch.sort(pos_pair_)[0]
         neg_pair_ = torch.sort(neg_sim[i])[0]
 
-        neg_pair = torch.masked_select(neg_pair_, neg_pair_ > pos_pair_[0] - self.margin)
-        pos_pair = torch.masked_select(pos_pair_, pos_pair_ < neg_pair_[-1] + self.margin)
+        neg_pair = torch.masked_select(neg_pair_, neg_pair_ > pos_pair_[0] - margin)
+        pos_pair = torch.masked_select(pos_pair_, pos_pair_ < neg_pair_[-1] + margin)
         # pos_pair = pos_pair[1:]
         if len(neg_pair) < 1:
             c += 1
